@@ -1,28 +1,54 @@
-const main = require('../main/main');
+"use strict"
+var _ = require("lodash");
+var chai = require("chai");
+var sinon = require("sinon");
+var sinonChai = require("sinon-chai");
+var expect = chai.expect;
+chai.use(sinonChai);
 
-describe('taxi fee', function () {
-    it('within 2km and parking' , function() {
-        let inputs = {distance:1,parkTime:5};
-        let summary = main(inputs);
-        let expected = 7;
-        expect(summary).toEqual(expected);
+const taxiFee = require('../main/main');
+
+describe('taxiFee', function () {
+    // write your tests here...
+    it("return 6 when the distance is less than 2km without waiting",function () {
+        let distance = 1;
+        let waiting = 0;
+        let result=taxiFee(distance,waiting);
+        expect(result).to.equal(6);
     });
-    it('between 2km and 8km and parking' , function() {
-        let inputs = {distance:7,parkTime:10};
-        let summary = main(inputs);
-        let expected = 13;
-        expect(summary).toEqual(expected);
+
+    it("return the result when the distance is less than 2km with waiting",function () {
+        let distance = 1;
+        let waiting = 5;
+        let result=taxiFee(distance,waiting);
+        expect(result).to.equal(7);
     });
-    it('more than 8km and parking' , function() {
-        let inputs = {distance:10,parkTime:20};
-        let summary = main(inputs);
-        let expected = 18;
-        expect(summary).toEqual(expected);
+
+    it("return the result when the distance is more than 2km and less than 8km without waiting",function () {
+        let distance = 5;
+        let waiting = 0;
+        let result=taxiFee(distance,waiting);
+        expect(result).to.equal(8);
     });
-    it('more than 8km and no parking' , function() {
-        let inputs = {distance:15,parkTime:0};
-        let summary = main(inputs);
-        let expected = 19;
-        expect(summary).toEqual(expected);
+
+    it("return the result when the distance is more than 2km and less than 8km with waiting",function () {
+        let distance = 5;
+        let waiting = 5;
+        let result=taxiFee(distance,waiting);
+        expect(result).to.equal(10);
+    });
+
+    it("return the result when the distance is more than 8km without waiting",function () {
+        let distance = 10;
+        let waiting = 0;
+        let result=taxiFee(distance,waiting);
+        expect(result).to.equal(13);
+    });
+
+    it("return the result when the distance is more than 8km with waiting",function () {
+        let distance = 10;
+        let waiting = 5;
+        let result=taxiFee(distance,waiting);
+        expect(result).to.equal(14);
     });
 });
